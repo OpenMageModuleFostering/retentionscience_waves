@@ -212,7 +212,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
         $this->_totalRecords = $this->getTotalRecords();
         $this->_start = 0;
         $this->_processedRecords = 0;
-        if (Mage::helper('waves')->getAWSAccessKeyId() != "" ){
+        if (Mage::helper('waves')->isEnabled()){
             Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("run called for file " . $this->getBulkFile() . " TotalRecords " . $this->_totalRecords);
         }
         

@@ -13,7 +13,7 @@ class RetentionScience_Waves_Model_Configfieldlistener extends Varien_Object {
             $results = "Waves Config Saved with params: \n" . $results;
        
        
-            if (Mage::helper('waves')->getAWSAccessKeyId() != "" ){
+            if (Mage::helper('waves')->isEnabled()){
                 Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage($results);
             }
         } catch(Exception $e) {
