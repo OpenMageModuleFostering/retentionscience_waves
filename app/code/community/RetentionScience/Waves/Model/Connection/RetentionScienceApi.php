@@ -4,7 +4,7 @@ class RetentionScience_Waves_Model_Connection_RetentionScienceApi {
 
     const API_TEST_URL = 'https://api.retentionsandbox.com';
     const API_URL = 'https://api.retentionscience.com';
-    const API_PORT = 80;
+    const API_PORT = 443;
     const API_VERSION = '1';
 
     private $password;
@@ -50,6 +50,7 @@ class RetentionScience_Waves_Model_Connection_RetentionScienceApi {
         // set options
         $options[CURLOPT_URL] = $url;
         $options[CURLOPT_PORT] = self::API_PORT;
+        
         $options[CURLOPT_USERAGENT] = $this->get_user_agent();
         // follow on only if allowed - 20120221
         if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')){
@@ -74,6 +75,7 @@ class RetentionScience_Waves_Model_Connection_RetentionScienceApi {
         $curl = curl_init();
         // set options
         curl_setopt_array($curl, $options);
+        
         // execute
         $response = curl_exec($curl);
         $headers = curl_getinfo($curl);
