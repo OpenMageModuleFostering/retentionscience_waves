@@ -51,7 +51,7 @@ class RetentionScience_Waves_Model_Export_Order_Customer extends RetentionScienc
     protected function getEntityData() {
         $tableName = $this->getTableName('sales/order');
         $query = 'SELECT `entity_id`, `customer_email` AS `email`, `customer_firstname` AS `firstname`, `customer_lastname` AS `lastname`, `created_at` FROM `' . $tableName . '` WHERE `customer_is_guest` = 1' . (empty($this->_idsToProcess) ? '' : ' AND `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . ' LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->getReadConnection()->fetchAll($query);
+        $this->_data = $this->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
@@ -81,7 +81,6 @@ class RetentionScience_Waves_Model_Export_Order_Customer extends RetentionScienc
 
     protected function getTotalRecords() {
         return (int) $this
-                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('sales/order') . '` WHERE `customer_is_guest` = 1' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 

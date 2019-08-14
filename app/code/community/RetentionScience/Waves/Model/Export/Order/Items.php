@@ -20,7 +20,7 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
     protected function getEntityData() {
         $tableName = $this->getTableName('sales/order_item');
         $query = 'SELECT `item_id` AS `entity_id`, `order_id` AS `order_record_id`, `product_id`, `name`, `qty_ordered`, `price`, `sku` FROM `' . $tableName . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . ' ORDER BY `item_id` ASC LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->getReadConnection()->fetchAll($query);
+        $this->_data = $this->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
@@ -63,7 +63,7 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
         }
         if(! empty($productIds)) {
             $categoryProductTable = $this->getTableName('catalog/category_product');
-            $cats = $this->getReadConnection()->fetchAll('
+            $cats = $this->fetchAll('
                 SELECT `category_id`, `product_id` AS `entity_id` FROM `' . $categoryProductTable . '`
                 WHERE `product_id` IN (' . implode(', ', $productIds) . ') ORDER BY `position` ASC
             ');
@@ -89,7 +89,6 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
 
     protected function getTotalRecords() {
         return (int) $this
-                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('sales/order_item') . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 

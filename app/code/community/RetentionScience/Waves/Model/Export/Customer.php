@@ -35,7 +35,7 @@ class RetentionScience_Waves_Model_Export_Customer extends RetentionScience_Wave
     protected function getEntityData() {
         $tableName = $this->getTableName('customer/entity');
         $query = 'SELECT `entity_id`, `email`, `created_at`, `updated_at` FROM `' . $tableName . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . ' LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->getReadConnection()->fetchAll($query);
+        $this->_data = $this->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
@@ -72,7 +72,6 @@ class RetentionScience_Waves_Model_Export_Customer extends RetentionScience_Wave
 
     protected function getTotalRecords() {
         return (int) $this
-                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('customer/entity') . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 

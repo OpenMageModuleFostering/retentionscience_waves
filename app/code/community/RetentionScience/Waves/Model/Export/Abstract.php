@@ -32,6 +32,10 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
 
     protected $_idsToProcess;
 
+    CONST RECONNECT_DELAY = 10;
+
+    CONST RECONNECT_LIMIT = 3;
+
     public function setIdsToProcess($ids) {
         $this->_idsToProcess = $ids;
     }
@@ -48,6 +52,34 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
             $this->_readConnection = $this->getResource()->getConnection('core_read');
         }
         return $this->_readConnection;
+    }
+
+    protected function fetchAll($query) {
+        return $this->query('fetchAll', $query);
+    }
+
+    protected function fetchOne($query) {
+        return $this->query('fetchOne', $query);
+    }
+
+    protected function query($method, $query, $reconnections = 1) {
+        try {
+            if($method == 'fetchAll') {
+                return $this->getReadConnection()->fetchAll($query);
+            } else {
+                return $this->getReadConnection()->fetchOne($query);
+            }
+        } catch(Exception $e) {
+            if($reconnections < self::RECONNECT_LIMIT) {
+                trigger_error('Mysql Error: ' . $e->getMessage(), E_USER_NOTICE);
+                sleep(self::RECONNECT_DELAY);
+                $this->getReadConnection()->closeConnection();
+                $this->getReadConnection()->getConnection();
+                return $this->query($method, $query, ++ $reconnections);
+            } else {
+                throw $e;
+            }
+        }
     }
 
     protected function getTableName($entity) {
@@ -103,7 +135,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
                     }
                     if(! empty($_entityIds)) {
                         if($useStore) {
-                            $attributeData = $this->getReadConnection()->fetchAll(
+                            $attributeData = $this->fetchAll(
                                 '   SELECT
                                     `default_value`.`entity_id` AS `' . $entityIdField . '`,
                                     IF(`store_value`.`value` IS NULL, `default_value`.`value`, `store_value`.`value`) AS `value`
@@ -121,7 +153,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
                                     `default_value`.`store_id` = 0
                             ');
                         } else {
-                            $attributeData = $this->getReadConnection()->fetchAll(
+                            $attributeData = $this->fetchAll(
                                 '   SELECT
                                     `default_value`.`entity_id` AS `' . $entityIdField . '`,
                                     `default_value`.`value`
@@ -144,7 +176,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
                 }
             } else {
                 if($useStore) {
-                    return $this->getReadConnection()->fetchAll('   SELECT
+                    return $this->fetchAll('   SELECT
                                     `default_value`.`entity_id`,
                                     IF(`store_value`.`value` IS NULL, `default_value`.`value`, `store_value`.`value`) AS `value`
                                 FROM
@@ -161,7 +193,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
                                     `default_value`.`store_id` = 0
                             ');
                 } else {
-                    return $this->getReadConnection()->fetchAll('   SELECT
+                    return $this->fetchAll('   SELECT
                                     `default_value`.`entity_id`,
                                     `default_value`.`value`
                                 FROM
@@ -192,7 +224,7 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
     }
 
     protected function fillTableData($tableName, $key, array $fields, $where = '') {
-        $tableData = $this->getReadConnection()->fetchAll(
+        $tableData = $this->fetchAll(
             'SELECT `' . $key . '` AS `entity_id`, `' . implode('`, `', array_keys($fields)) . '` FROM `' . $tableName . '`' .
             ' WHERE `' . $key . '` IN (' . implode(', ', $this->_entityIds) . ')' . ($where ? ' AND ' . $where : '')
         );

@@ -54,7 +54,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $query = 'SELECT `entity_id`, `type_id`, `sku` FROM `' . $tableName . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . '
             ORDER BY FIELD(`type_id`, "simple", "virtual", "downloadable", "configurable", "grouped", "bundle")
             , `entity_id` ASC LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->getReadConnection()->fetchAll($query);
+        $this->_data = $this->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
@@ -103,7 +103,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $bundleTable = $this->getTableName('bundle/selection');
-        $rows = $this->getReadConnection()->fetchAll('
+        $rows = $this->fetchAll('
             SELECT `parent_product_id` AS `parent_id`, `product_id` AS `entity_id` FROM `' . $bundleTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ')
         ');
@@ -121,7 +121,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $linkTable = $this->getTableName('catalog/product_link');
-        $rows = $this->getReadConnection()->fetchAll('
+        $rows = $this->fetchAll('
             SELECT `linked_product_id` AS `entity_id`, `product_id` AS `parent_id` FROM `' . $linkTable . '`
             WHERE `linked_product_id` IN (' . implode(', ', $this->_entityIds) . ')
               AND `link_type_id` = ' . Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED . '
@@ -140,7 +140,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $configurableLinkTable = $this->getTableName('catalog/product_super_link');
-        $rows = $this->getReadConnection()->fetchAll('
+        $rows = $this->fetchAll('
             SELECT `product_id` AS `entity_id`, `parent_id` FROM `' . $configurableLinkTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ')
         ');
@@ -158,7 +158,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $categoryProductTable = $this->getTableName('catalog/category_product');
-        $rows = $this->getReadConnection()->fetchAll('
+        $rows = $this->fetchAll('
             SELECT `category_id`, `product_id` AS `entity_id` FROM `' . $categoryProductTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ') ORDER BY `position` ASC
         ');
@@ -183,7 +183,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $query = 'SELECT mgt.`entity_id`, mgt.`value` FROM `' . $mediaGalleryTable . '` AS mgt '
             . 'INNER JOIN `' . $mediaGalleryValueTable . '` AS mgvt ON mgt.`value_id` = mgvt.`value_id` '
             . 'WHERE mgt.`entity_id` IN (' . implode(', ', $this->_entityIds) . ') AND mgvt.`store_id` = ' . $this->_store_id . ' AND mgvt.`disabled` = 0';
-        $results = $this->getReadConnection()->fetchAll($query);
+        $results = $this->fetchAll($query);
         if(! empty($results)) {
             foreach($results AS $row) {
                 $entityId = $row['entity_id'];
@@ -198,7 +198,6 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
 
     protected function getTotalRecords() {
         return (int) $this
-                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('catalog/product') . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 
