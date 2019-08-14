@@ -37,21 +37,30 @@ class RetentionScience_Waves_Model_Source_Credentials extends Mage_Core_Model_Co
             
 
             if($valid_aws_credentials && $valid_site_id) {
-                $msg = "Saving helper details: site_id " . $site_id['id'];
-                $msg .= ", access_key_id " . $aws_credentials['access_key_id'];
-                $msg .= ", secret_access_key " . $aws_credentials['secret_access_key'];
-                $msg .= ", log_group " . $aws_credentials['log_group'];
-                $msg .= ", log_stream " . $aws_credentials['log_stream'];
-                $msg .= ", session_token " . $aws_credentials['session_token'];
-
-                Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage($msg);
-                
+            
                 Mage::helper('waves')->setAWSAccessKeyId($aws_credentials['access_key_id']);
                 Mage::helper('waves')->setAWSSecretAccessKey($aws_credentials['secret_access_key']);
                 Mage::helper('waves')->setAWSLogStream($aws_credentials['log_stream']);
                 Mage::helper('waves')->setAWSLogGroup($aws_credentials['log_group']);
                 Mage::helper('waves')->setAWSSessionToken($aws_credentials['session_token']);
                 Mage::helper('waves')->setSiteId($site_id['id']);
+                
+                try {
+                    $msg = "Saved helper details: site_id " . $site_id['id'];
+                    $msg .= ", access_key_id " . $aws_credentials['access_key_id'];
+                    $msg .= ", secret_access_key " . $aws_credentials['secret_access_key'];
+                    $msg .= ", log_group " . $aws_credentials['log_group'];
+                    $msg .= ", log_stream " . $aws_credentials['log_stream'];
+                    $msg .= ", session_token " . $aws_credentials['session_token'];
+                    Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage($msg);
+                    
+                } catch(Exception $e) {
+                    Mage::helper('waves')->disable();
+                    Mage::getSingleton('core/session')->addError('Error: ' . $e->getMessage());
+                }
+
+               
+                
             }
         }
     }

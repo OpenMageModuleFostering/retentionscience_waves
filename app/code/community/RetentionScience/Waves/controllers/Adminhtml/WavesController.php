@@ -10,7 +10,9 @@ class RetentionScience_Waves_Adminhtml_WavesController extends Mage_Adminhtml_Co
     public function syncDataAction() {
 
         try {
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - button clicked");
+            if (Mage::helper('waves')->getAWSAccessKeyId() != "" ){
+                Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - button clicked");
+            }
 
             $event = new Varien_Object();
 
@@ -25,12 +27,13 @@ class RetentionScience_Waves_Adminhtml_WavesController extends Mage_Adminhtml_Co
                 'event' => $event,
             ));
 
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - Data successfully exported");
+            if (Mage::helper('waves')->getAWSAccessKeyId() != "" ){
+                Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - Data successfully exported");
+            }
 
             Mage::getSingleton('core/session')->addSuccess('Data successfully exported');
 
         } catch(Exception $e) {
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - Exception: " . $e->getMessage());
 
             Mage::getSingleton('core/session')->addError('Error: ' . $e->getMessage());
         }

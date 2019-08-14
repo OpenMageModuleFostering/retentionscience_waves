@@ -80,6 +80,7 @@ class RetentionScience_Waves_Model_Connection_AwsCloudWatch extends Varien_Objec
      * @param string $msg
      */
     public function logMessage($msg) {
+                
         $siteId = Mage::helper('waves')->getSiteId();
         $prefix = date('Y-m-d H:i:s'). ' UTC - [site_id ' . $siteId . '] ';
 

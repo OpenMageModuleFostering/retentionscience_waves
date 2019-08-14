@@ -2,7 +2,7 @@
 <config>
     <modules>
         <RetentionScience_Waves>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
         </RetentionScience_Waves>
     </modules>
     <global>
