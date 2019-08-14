@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+    <name>RetentionScience_Waves</name>
+    <version>3.0.1</version>
+    <stability>stable</stability>
+    <license uri="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Retention Science Integration</summary>
+    <description>Notes: This extension interfaces with Retention Science, and communicates through the Retention Science API. For more information, and to sign up for API access, please see http://retentionscience.com.&#xD;
+</description>
+    <notes>Brand new API 3.0 Integration</notes>
+    <authors><author><name>Retention Science</name><user>retentionsci</user><email>support@retentionscience.com</email></author></authors>
+    <date>2016-04-05</date>
+    <time>23:00:15</time>
+    <contents><target name="magecommunity"><dir name="RetentionScience"><dir name="Waves"><dir name="Block"><dir name="Adminhtml"><file name="Rscore.php" hash="e8bc9ced354227cb3ba0f422230cc903"/><file name="Syncbutton.php" hash="a2c466f4ddb27ab28bf00b73d2358c0d"/></dir><file name="Waves.php" hash="2e6376311d74b5b7d164e6d1ba414be8"/></dir><dir name="Helper"><file name="Data.php" hash="adca88b4b8c7c245cddf147f337d3c13"/></dir><dir name="Model"><file name="Configfieldlistener.php" hash="d6e33f8d77edaa31c3c92994a77bfb40"/><dir name="Connection"><file name="AwsCloudWatch.php" hash="93b7341d33489fae5fa4ab624073d504"/><file name="RetentionScienceApi.php" hash="3d00d235bcddd72cc4f0fc504969b0fc"/></dir><dir name="Container"><file name="Waves.php" hash="2f806c5c1ed969bb30f4824e4a8bda5d"/></dir><file name="Cron.php" hash="aaaf7a1cc39c9c63e155d6ba63ea81f1"/><dir name="Export"><file name="Abstract.php" hash="879a1f98cefa2b5541f7b04f661bb0d2"/><file name="Category.php" hash="7c4a1ca9090b1380228f2501e82673ed"/><file name="Customer.php" hash="3c57c6dd1b5b766346ddee0a86e15abd"/><dir name="Order"><file name="Customer.php" hash="f1d992c41bbe1fe1d83aa267cabc77a2"/><file name="Items.php" hash="acef2135fa639e6152c6be45736947b0"/></dir><file name="Order.php" hash="10773bafb4e99b05913e65a0dc840916"/><file name="Product.php" hash="6ddd1e0b31249d16e612354e6730669f"/></dir><file name="Observer.php" hash="3b182e9c47b46f5ed0ad1288645b11c4"/><dir name="Source"><file name="Credentials.php" hash="cd130474463c736290805960c51de42c"/><file name="Cronconfig.php" hash="ba23b32971c18cad2dde9277d3ae283e"/><file name="Rscoredata.php" hash="7a4ebcc89436073a6a0b714511a7c7ea"/><file name="Stores.php" hash="a3a60fcd428aa2c7afa34f5d2f501f39"/></dir></dir><dir name="controllers"><dir name="Adminhtml"><file name="WavesController.php" hash="454409b7e1d1d5528495cc5527642a71"/></dir><dir name="Frontend"><file name="IndexController.php" hash="4546a381cb440987f2acbc75a6f3040e"/></dir></dir><dir name="etc"><file name="adminhtml.xml" hash="a18529fc20edd574302d40cac61a1f87"/><file name="cache.xml" hash="1f43383e0399b6aad3afd134774beea6"/><file name="config.xml" hash="88bfe082ae333d8f6424272b21b71ef6"/><file name="system.xml" hash="c9ce31c0a9c7581f928866cd5da8ab0a"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><file name="waves.xml" hash="83bc698a8b92cedf523fa4c0ea6f2c9f"/></dir><dir name="template"><dir name="waves"><file name="waves.phtml" hash="eb7c68dedd644b9497fb30eb669e990d"/></dir></dir></dir></dir></dir></target><target name="mageweb"><dir name="js"><dir name="waves"><file name="waves.js" hash="992baa185644ac97d0c683b4934b32a0"/></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.0.0</min><max>6.0.0</max></php></required></dependencies>
+</package>

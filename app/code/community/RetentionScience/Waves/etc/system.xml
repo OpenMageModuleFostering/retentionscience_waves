@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<config>
+
+
+    <tabs>
+        <retentionsciencetab translate="label" module="waves">
+            <label>Retention Science</label>
+            <sort_order>400</sort_order>
+        </retentionsciencetab>
+    </tabs>
+
+    <sections>
+        <waves translate="label" module="waves">
+            <label>Retention Science</label>
+            <tab>retentionsciencetab</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>50</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <!--<rscore translate="label">-->
+                    <!--<label>Retention Score</label>-->
+                    <!--<sort_order>0</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>1</show_in_store>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<frontend_model>waves/adminhtml_rscore</frontend_model>-->
+                <!--</rscore>-->
+
+                <retentionscience_settings translate="label">
+                    <label>Basic Settings</label>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Retention Science enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+
+                        <api_user translate="label">
+                            <label>API User</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                            <backend_model>waves/source_credentials</backend_model>
+                        </api_user>
+                        <api_pass translate="label">
+                            <label>API Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                            <backend_model>waves/source_credentials</backend_model>
+                        </api_pass>
+                        <site_id translate="label">
+                            <label>Site ID</label>
+                            <frontend_type>label</frontend_type>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                        </site_id>
+                        <testmode translate="label">
+                            <label>Test Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>18</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <backend_model>waves/source_credentials</backend_model>
+                        </testmode>
+                        <ajaxaddtocartenable translate="label">
+                            <label>AJAX add-to-cart support enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ajaxaddtocartenable>
+
+                        <store_id translate="label">
+                            <label>Store</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>waves/source_stores</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                        </store_id>
+                    </fields>
+                </retentionscience_settings>
+
+
+                <rs_sync_settings translate="label">
+                    <label>Sync Settings</label>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+
+                        <sync_data_cron translate="label">
+                            <label>Data Sync Cron Entry</label>
+                            <rs_cron_job>retentionscience_waves_syncdata</rs_cron_job>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>38</sort_order>
+                            <backend_model>waves/source_cronconfig</backend_model>
+                            <comment>Use Crontab Format (Eg. "0 10 * * *" for 10AM)</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                        </sync_data_cron>
+
+                        <sync_data_run translate="label">
+                            <label></label>
+                            <rs_button_url>syncdata</rs_button_url>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>waves/adminhtml_syncbutton</frontend_model>
+                            <sort_order>39</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sync_data_run>
+                    </fields>
+                </rs_sync_settings>
+
+                <rs_sync_advanced>
+                    <label>Advanced Sync Settings</label>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <rs_use_bulk_compression translate="label">
+                            <label>Use bulk compression</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>97</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </rs_use_bulk_compression>
+                    </fields>
+                </rs_sync_advanced>
+            </groups>
+        </waves>
+    </sections>
+
+
+</config>

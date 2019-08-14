@@ -1,0 +1,66 @@
+<?php
+if ($this->isEnabled()) {
+    $loggedIn = $this->customerLoggedIn();
+    $moduleName = $this->getRequest()->getModuleName();
+    $controllerName = $this->getRequest()->getControllerName();
+    $actionName = $this->getRequest()->getActionName();
+    $productId = $this->getProductId(); ?>
+
+    <!-- lmca <?php echo $loggedIn ?> | <?php echo $moduleName ?> | <?php echo $controllerName ?> | <?php echo $actionName ?> -->
+
+    <script type="text/javascript">
+        var _rsq = _rsq || [];
+        _rsq.push(['_setSiteId', '<?php echo $this->getSiteId();?>']);
+
+        <?php if($loggedIn) {
+        $user_id_set = $this->customerId(); ?>
+        _rsq.push(['_setUserId', '<?php echo $user_id_set; ?>']);
+        <?php }
+
+        if($productId): ?>
+        _rsq.push(['_addItem', <?php echo json_encode(array('id'=>$productId))?>]);    
+        <?php endif;
+
+        if (($moduleName == "checkout" && $controllerName == "cart" && $actionName == "index") || ($moduleName == "rangepricing" && $controllerName == "checkout_cart" && $actionName == "index")) {
+        $allItems = Mage::getModel('checkout/cart')->getQuote()->getAllVisibleItems();
+        foreach ($allItems as $item) {
+        $itemArr['id'] = $item->getProductId();
+        $itemArr['name'] = $item->getName();
+        $itemArr['price'] = $item->getPrice(); ?>
+        _rsq.push(['_addItem', <?php echo json_encode($itemArr) ?>]);
+        <?php } ?>
+        _rsq.push(['_setAction', 'shopping_cart']);
+        <?php }
+
+        // If order success page
+        $orders = $this->getOrders();
+        if(! empty($orders) AND is_array($orders)) {
+            foreach($orders AS $order) {
+                if (empty($user_id_set)) {
+                    $user_record_id = md5(trim(strtolower($order->getCustomerEmail()))); ?>
+                    // guest
+                    _rsq.push(['_setUserId', '<?php echo $user_record_id; ?>']);
+                <?php }
+                $allitems = $order->getAllVisibleItems();
+                foreach($allitems as $item){
+                    $itemArr['id'] = $item->getProductId();
+                    $itemArr['name'] = $item->getName();
+                    $itemArr['price'] = $item->getPrice(); ?>
+
+                    _rsq.push(['_addItem', <?php echo json_encode($itemArr); ?>]);
+                <?php } ?>
+                _rsq.push(['_addOrder', {id: '<?php echo $this->getOrderId();?>', total: '<?php echo $order->getBaseGrandTotal();?>'}]);
+                _rsq.push(['_setAction', 'checkout_success']); <?php
+            }
+        } ?>
+
+        _rsq.push(['_track']);
+        (function() { var rScix = document.createElement('script');; rScix.type = 'text/javascript';; rScix.async = true;; rScix.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'd1stxfv94hrhia.cloudfront.net/waves/v2/w.js';; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(rScix);; })();
+    </script>
+    <?php if ($this->isAjaxAddToCartEnable()) { ?>
+        <script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."waves/waves.js";?>"></script>
+        <script type="text/javascript">
+            setAjaxSendCartUrl('<?php echo Mage::getUrl('waves') ?>');
+        </script>
+    <?php }
+}

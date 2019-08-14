@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/RetentionScience_Waves",
+    "type": "magento-module",
+    "license": "Apache-License-2.0",
+    "homepage": "",
+    "description": "Retention Science Integration",
+    "authors": [
+    {
+        "name": "Retention Science",
+        "email": "support@retentionscience.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="before_body_end">
+            <block type="waves/waves" name="waves_waves" template="waves/waves.phtml"></block>
+        </reference>
+    </default>
+</layout>

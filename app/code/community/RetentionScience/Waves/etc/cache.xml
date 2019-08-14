@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <placeholders>
+        <waves>
+            <block>waves/waves</block>
+            <name>waves_waves</name>
+            <placeholder>WAVES</placeholder>
+            <container>RetentionScience_Waves_Model_Container_Waves</container>
+            <cache_lifetime>0</cache_lifetime>
+        </waves>
+    </placeholders>
+</config>
