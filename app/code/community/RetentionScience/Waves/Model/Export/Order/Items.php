@@ -50,6 +50,9 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
         if(! empty($this->_data)) {
             foreach($this->_data AS $row) {
                 $productId = $row['product_id'];
+                if(empty($productId)) {
+                    continue;
+                }
                 if(! in_array($productId, $productIds)) {
                     $productIds[] = $productId;
                 }
