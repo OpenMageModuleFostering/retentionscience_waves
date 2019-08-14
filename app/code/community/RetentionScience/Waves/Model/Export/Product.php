@@ -17,6 +17,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         'parent_record_id',
         'attribute_1',
         'categories',
+        'visibility',
     );
 
     protected $_bulkUploadFile = 'items';
@@ -79,6 +80,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $this->fillAttributeData('catalog_product', 'image');
         $this->fillAttributeData('catalog_product', 'status', NULL, FALSE);
         $this->fillAttributeData('catalog_product', 'url_key');
+        $this->fillAttributeData('catalog_product', 'visibility', NULL, FALSE);
         /* STOCK DATA */
         $this->fillTableData($this->getTableName('cataloginventory/stock_item'), 'product_id', array(
             'qty'                       => 'stock_qty',
@@ -232,6 +234,17 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         return isset($data['special_price']) ? $data['special_price'] : (isset($data['price']) ? $data['price'] : '');
     }
 
+    /**
+     * Possible values:
+     * 1 - hidden
+     * 2 - visible in catalog
+     * 3 - visible in search
+     * 4 - visible in both: catalog and search
+     */
+    protected function getVisibility($data) {
+        return $data['visibility'];
+    }
+
     protected function getActive($data) {
         $active = 1;
         $entityId = $data['entity_id'];
@@ -307,6 +320,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         Mage::unregister('custom_entry_point');
         Mage::register('custom_entry_point', TRUE);
         $this->_productModel->setData($data);
+        $this->_productModel->setStoreId($this->getStoreId());
         return $this->_productModel->getProductUrl();
     }
 

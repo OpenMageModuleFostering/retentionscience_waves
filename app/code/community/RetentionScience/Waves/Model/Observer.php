@@ -153,8 +153,8 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
                 while(! feof($fp)) {
                     gzwrite($gzfp, fread($fp, 1024 * 512));
                 }
-                gzclose($fp);
-                fclose($gzfp);
+                gzclose($gzfp);
+                fclose($fp);
                 $filename = $gzfilename;
             }
             $uploadFiles[$group] = $filename;
@@ -332,6 +332,8 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
     }
 
     protected function export() {
+        $oldValue = Mage::app()->getStore(Mage::helper('waves')->getStoreId())->getConfig(Mage_Core_Model_Store::XML_PATH_STORE_IN_URL);
+        Mage::app()->getStore(Mage::helper('waves')->getStoreId())->setConfig(Mage_Core_Model_Store::XML_PATH_STORE_IN_URL, '1');
         switch($this->getType()) {
             case self::EXPORT_TYPE_BATCH:
                 $this->exportBatch();
@@ -340,6 +342,7 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
                 $this->exportRecord();
                 break;
         }
+        Mage::app()->getStore(Mage::helper('waves')->getStoreId())->setConfig(Mage_Core_Model_Store::XML_PATH_STORE_IN_URL, $oldValue);
     }
 
     protected function validate() {
