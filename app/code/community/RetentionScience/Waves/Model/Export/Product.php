@@ -236,7 +236,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
 
     // @TODO: Ask Andrew about special price date range
     protected function getPrice($data) {
-        return isset($data['special_price']) ? $data['special_price'] : (isset($data['price']) ? $data['price'] : '');
+        return isset($data['special_price']) ? $data['special_price'] : (isset($data['price']) ? $data['price'] : '0.00');
     }
 
     /**
