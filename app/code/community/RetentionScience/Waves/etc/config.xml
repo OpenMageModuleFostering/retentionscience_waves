@@ -2,7 +2,7 @@
 <config>
     <modules>
         <RetentionScience_Waves>
-            <version>3.0.1</version>
+            <version>3.0.10</version>
         </RetentionScience_Waves>
     </modules>
     <global>
@@ -100,6 +100,14 @@
                     <model>waves/cron::export</model>
                 </run>
             </retentionscience_waves_syncdata>
+            <retentionscience_waves_syncdata_manual>
+                <run>
+                    <model>waves/cron::exportManual</model>
+                </run>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+            </retentionscience_waves_syncdata_manual>
         </jobs>
     </crontab>
     <default>

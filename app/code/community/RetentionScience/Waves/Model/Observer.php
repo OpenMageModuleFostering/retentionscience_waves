@@ -97,10 +97,9 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
             }
 
             if(! $this->_delayedUpload) {
-                // temporarily disabling so we can inspect files
-//                if(file_exists($exportModel->getBulkFile())) {
-//                    @ unlink($exportModel->getBulkFile());
-//                }
+                if(file_exists($exportModel->getBulkFile())) {
+                    @ unlink($exportModel->getBulkFile());
+                }
 
                 if(file_exists($exportModel->getBulkFile() . '.gz')) {
                     @ unlink($exportModel->getBulkFile() . '.gz');
@@ -113,10 +112,9 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
         if($this->_delayedUpload AND ! empty($this->_delayedFiles)) {
             $this->uploadBulkFile($this->_delayedFiles);
             foreach($this->_delayedFiles AS $_file) {
-                // temporarily disabling so we can inspect files
-//                if(file_exists($_file)) {
-//                    @ unlink($_file);
-//                }
+                if(file_exists($_file)) {
+                    @ unlink($_file);
+                }
 
                 if(file_exists($_file . '.gz')) {
                     @ unlink($_file . '.gz');
@@ -291,6 +289,10 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
 
     public function errorHandler($errno, $errstr, $errfile, $errline) {
         if(! $this->getListenErrors()) {
+            return;
+        }
+        // Thats because magento doesn't support namespaces
+        if(preg_match('#Varien#', $errfile)) {
             return;
         }
         // Catch recoverable error

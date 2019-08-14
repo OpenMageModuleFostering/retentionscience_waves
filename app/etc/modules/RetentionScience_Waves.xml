@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <RetentionScience_Waves>
+            <active>true</active>
+            <codePool>community</codePool>
+        </RetentionScience_Waves>
+    </modules>
+</config>

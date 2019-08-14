@@ -10,27 +10,15 @@ class RetentionScience_Waves_Adminhtml_WavesController extends Mage_Adminhtml_Co
     public function syncDataAction() {
 
         try {
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - button clicked");
+            if (Mage::helper('waves')->isEnabled()){
+                Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - button clicked");
+            }
 
-            $event = new Varien_Object();
+            Mage::helper('waves')->setRunManual(1);
 
-            $event->setData(array(
-                'type' => 'batch',
-                'groups' => 'all',
-            ));
-
-            $event->setSource('magento_admin');
-
-            Mage::dispatchEvent('waves_init_export', array(
-                'event' => $event,
-            ));
-
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - Data successfully exported");
-
-            Mage::getSingleton('core/session')->addSuccess('Data successfully exported');
+            Mage::getSingleton('core/session')->addSuccess('Export scheduled and will run shortly');
 
         } catch(Exception $e) {
-            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("SyncData Button - Exception: " . $e->getMessage());
 
             Mage::getSingleton('core/session')->addError('Error: ' . $e->getMessage());
         }

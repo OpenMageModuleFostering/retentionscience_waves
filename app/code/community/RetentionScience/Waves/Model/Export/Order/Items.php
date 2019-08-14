@@ -26,6 +26,9 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
         if(! empty($this->_data)) {
             $sortedData = array();
             foreach($this->_data AS $record) {
+                if(empty($record['entity_id'])) {
+                    continue;
+                }
                 $this->_entityIds[] = $record['entity_id'];
                 $sortedData[$record['entity_id']] = $record;
             }
@@ -47,6 +50,9 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
         if(! empty($this->_data)) {
             foreach($this->_data AS $row) {
                 $productId = $row['product_id'];
+                if(empty($productId)) {
+                    continue;
+                }
                 if(! in_array($productId, $productIds)) {
                     $productIds[] = $productId;
                 }
@@ -98,7 +104,7 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
     }
 
     protected function getItemRecordId($data) {
-        return $this->getPrimaryKey($data);
+        return $data['product_id'];
     }
 
     protected function getName($data) {

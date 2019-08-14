@@ -212,7 +212,9 @@ abstract class RetentionScience_Waves_Model_Export_Abstract {
         $this->_totalRecords = $this->getTotalRecords();
         $this->_start = 0;
         $this->_processedRecords = 0;
-        Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("run called for file " . $this->getBulkFile() . " TotalRecords " . $this->_totalRecords);
+        if (Mage::helper('waves')->isEnabled()){
+            Mage::getSingleton('waves/connection_awsCloudWatch')->logMessage("run called for file " . $this->getBulkFile() . " TotalRecords " . $this->_totalRecords);
+        }
         
         while($this->_start < $this->_totalRecords) {
 
