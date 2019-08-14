@@ -104,7 +104,7 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
     }
 
     protected function getItemRecordId($data) {
-        return $this->getPrimaryKey($data);
+        return $data['product_id'];
     }
 
     protected function getName($data) {
