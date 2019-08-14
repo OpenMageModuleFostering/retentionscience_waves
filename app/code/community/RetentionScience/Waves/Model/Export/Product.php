@@ -218,7 +218,14 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
     }
 
     protected function getManufacturer($data) {
-        return isset($data['manufacturer']) ? $data['manufacturer'] : '';
+        // Magento outputs false on some items when manufacturer not selected in UI
+        $manufacturer = $data['manufacturer'];
+
+        if (isset($manufacturer) && ($manufacturer != false) {
+          return $manufacturer;
+        } else {
+          return NULL;
+        }
     }
 
     protected function getModel($data) {

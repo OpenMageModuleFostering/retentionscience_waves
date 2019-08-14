@@ -80,7 +80,7 @@ class RetentionScience_Waves_Model_Export_Order extends RetentionScience_Waves_M
     }
 
     protected function getOrderedAt($data) {
-        return date("Y-m-d H:i:s", Mage::getModel('core/date')->timestamp(strtotime($data['created_at'])));
+        return gmdate("Y-m-d H:i:s", Mage::getModel('core/date')->timestamp(strtotime($data['created_at'])));
     }
 
     protected function getPaymentMethod($data) {

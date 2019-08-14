@@ -166,11 +166,11 @@ class RetentionScience_Waves_Model_Export_Customer extends RetentionScience_Wave
     }
 
     protected function getAccountCreatedOn($data) {
-        return date("Y-m-d H:i:s", Mage::getModel('core/date')->timestamp(strtotime($data['created_at'])));
+        return date("Y-m-d H:i:s", strtotime($data['created_at']));
     }
 
     protected function getLastLogOnAt($data) {
-        return date("Y-m-d H:i:s", Mage::getModel('core/date')->timestamp(strtotime($data['updated_at'])));
+        return date("Y-m-d H:i:s", strtotime($data['updated_at']));
     }
 
 }
