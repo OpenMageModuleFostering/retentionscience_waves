@@ -293,6 +293,10 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
         if(! $this->getListenErrors()) {
             return;
         }
+        // Thats because magento doesn't support namespaces
+        if(preg_match('#Varien#', $errfile)) {
+            return;
+        }
         // Catch recoverable error
         // Do stuff
         $this->logRecoverableError($errno, $errstr, $errfile, $errline);

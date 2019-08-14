@@ -26,6 +26,9 @@ class RetentionScience_Waves_Model_Export_Order_Items extends RetentionScience_W
         if(! empty($this->_data)) {
             $sortedData = array();
             foreach($this->_data AS $record) {
+                if(empty($record['entity_id'])) {
+                    continue;
+                }
                 $this->_entityIds[] = $record['entity_id'];
                 $sortedData[$record['entity_id']] = $record;
             }
