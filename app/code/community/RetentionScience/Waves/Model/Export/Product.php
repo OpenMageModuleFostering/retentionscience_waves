@@ -17,7 +17,6 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         'parent_record_id',
         'attribute_1',
         'categories',
-        'visibility',
     );
 
     protected $_bulkUploadFile = 'items';
@@ -55,15 +54,12 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $query = 'SELECT `entity_id`, `type_id`, `sku` FROM `' . $tableName . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . '
             ORDER BY FIELD(`type_id`, "simple", "virtual", "downloadable", "configurable", "grouped", "bundle")
             , `entity_id` ASC LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->fetchAll($query);
+        $this->_data = $this->getReadConnection()->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
             $sortedData = array();
             foreach($this->_data AS $record) {
-                if(empty($record['entity_id'])) {
-                    continue;
-                }
                 $this->_entityIds[] = $record['entity_id'];
                 $sortedData[$record['entity_id']] = $record;
             }
@@ -80,7 +76,6 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $this->fillAttributeData('catalog_product', 'image');
         $this->fillAttributeData('catalog_product', 'status', NULL, FALSE);
         $this->fillAttributeData('catalog_product', 'url_key');
-        $this->fillAttributeData('catalog_product', 'visibility', NULL, FALSE);
         /* STOCK DATA */
         $this->fillTableData($this->getTableName('cataloginventory/stock_item'), 'product_id', array(
             'qty'                       => 'stock_qty',
@@ -105,7 +100,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $bundleTable = $this->getTableName('bundle/selection');
-        $rows = $this->fetchAll('
+        $rows = $this->getReadConnection()->fetchAll('
             SELECT `parent_product_id` AS `parent_id`, `product_id` AS `entity_id` FROM `' . $bundleTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ')
         ');
@@ -123,7 +118,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $linkTable = $this->getTableName('catalog/product_link');
-        $rows = $this->fetchAll('
+        $rows = $this->getReadConnection()->fetchAll('
             SELECT `linked_product_id` AS `entity_id`, `product_id` AS `parent_id` FROM `' . $linkTable . '`
             WHERE `linked_product_id` IN (' . implode(', ', $this->_entityIds) . ')
               AND `link_type_id` = ' . Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED . '
@@ -142,7 +137,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $configurableLinkTable = $this->getTableName('catalog/product_super_link');
-        $rows = $this->fetchAll('
+        $rows = $this->getReadConnection()->fetchAll('
             SELECT `product_id` AS `entity_id`, `parent_id` FROM `' . $configurableLinkTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ')
         ');
@@ -160,7 +155,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
             return;
         }
         $categoryProductTable = $this->getTableName('catalog/category_product');
-        $rows = $this->fetchAll('
+        $rows = $this->getReadConnection()->fetchAll('
             SELECT `category_id`, `product_id` AS `entity_id` FROM `' . $categoryProductTable . '`
             WHERE `product_id` IN (' . implode(', ', $this->_entityIds) . ') ORDER BY `position` ASC
         ');
@@ -185,7 +180,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         $query = 'SELECT mgt.`entity_id`, mgt.`value` FROM `' . $mediaGalleryTable . '` AS mgt '
             . 'INNER JOIN `' . $mediaGalleryValueTable . '` AS mgvt ON mgt.`value_id` = mgvt.`value_id` '
             . 'WHERE mgt.`entity_id` IN (' . implode(', ', $this->_entityIds) . ') AND mgvt.`store_id` = ' . $this->_store_id . ' AND mgvt.`disabled` = 0';
-        $results = $this->fetchAll($query);
+        $results = $this->getReadConnection()->fetchAll($query);
         if(! empty($results)) {
             foreach($results AS $row) {
                 $entityId = $row['entity_id'];
@@ -200,6 +195,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
 
     protected function getTotalRecords() {
         return (int) $this
+                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('catalog/product') . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 
@@ -218,12 +214,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
     }
 
     protected function getManufacturer($data) {
-        // Magento outputs false on some items when manufacturer not selected in UI
-        if (isset($data['manufacturer']) && ($data['manufacturer'] != false)) {
-          return $data['manufacturer'];
-        } else {
-          return NULL;
-        }
+        return isset($data['manufacturer']) ? $data['manufacturer'] : '';
     }
 
     protected function getModel($data) {
@@ -236,18 +227,7 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
 
     // @TODO: Ask Andrew about special price date range
     protected function getPrice($data) {
-        return isset($data['special_price']) ? $data['special_price'] : (isset($data['price']) ? $data['price'] : '0.00');
-    }
-
-    /**
-     * Possible values:
-     * 1 - hidden
-     * 2 - visible in catalog
-     * 3 - visible in search
-     * 4 - visible in both: catalog and search
-     */
-    protected function getVisibility($data) {
-        return $data['visibility'];
+        return isset($data['special_price']) ? $data['special_price'] : (isset($data['price']) ? $data['price'] : '');
     }
 
     protected function getActive($data) {
@@ -325,7 +305,6 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
         Mage::unregister('custom_entry_point');
         Mage::register('custom_entry_point', TRUE);
         $this->_productModel->setData($data);
-        $this->_productModel->setStoreId($this->getStoreId());
         return $this->_productModel->getProductUrl();
     }
 

@@ -42,7 +42,7 @@ class RetentionScience_Waves_Model_Connection_AwsCloudWatch extends Varien_Objec
 
         // Bug fix for errors during class loading
         try {
-            $result = new Guzzle\Service\Resource\Model;
+            $result = new Aws\Result;
             $this->getClient()->putLogEvents(array(
                 'logGroupName' => 'test',
                 'logStreamName' => 'test',
@@ -80,7 +80,6 @@ class RetentionScience_Waves_Model_Connection_AwsCloudWatch extends Varien_Objec
      * @param string $msg
      */
     public function logMessage($msg) {
-                
         $siteId = Mage::helper('waves')->getSiteId();
         $prefix = date('Y-m-d H:i:s'). ' UTC - [site_id ' . $siteId . '] ';
 
@@ -277,11 +276,10 @@ class RetentionScience_Waves_Model_Connection_AwsCloudWatch extends Varien_Objec
     protected function getLogStream($logGroupName, $logStreamName) {
         try {
             $logStreamName = preg_replace('#[:]#', '', $logStreamName);
-              // No longer creating log stream. Expected to exist
-//            $this->getClient()->createLogStream(array(
-//                'logGroupName' => $logGroupName,
-//                'logStreamName' => $logStreamName,
-//            ));
+            $this->getClient()->createLogStream(array(
+                'logGroupName' => $logGroupName,
+                'logStreamName' => $logStreamName,
+            ));
             return $logStreamName;
         } catch(Aws\CloudWatchLogs\Exception\CloudWatchLogsException $e) {
             return $logStreamName;

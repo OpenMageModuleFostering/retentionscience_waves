@@ -49,7 +49,7 @@ if ($this->isEnabled()) {
 
                     _rsq.push(['_addItem', <?php echo json_encode($itemArr); ?>]);
                 <?php } ?>
-                _rsq.push(['_addOrder', {id: '<?php echo $order->getId();?>', total: '<?php echo $order->getBaseGrandTotal();?>'}]);
+                _rsq.push(['_addOrder', {id: '<?php echo $this->getOrderId();?>', total: '<?php echo $order->getBaseGrandTotal();?>'}]);
                 _rsq.push(['_setAction', 'checkout_success']); <?php
             }
         } ?>

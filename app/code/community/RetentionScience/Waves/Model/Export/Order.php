@@ -21,15 +21,12 @@ class RetentionScience_Waves_Model_Export_Order extends RetentionScience_Waves_M
     protected function getEntityData() {
         $tableName = $this->getTableName('sales/order');
         $query = 'SELECT `entity_id`, `state`, `customer_email`, `base_subtotal`, `base_discount_amount`, `shipping_amount`, `base_tax_amount`, `created_at` FROM `' . $tableName . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')') . ' ORDER BY `entity_id` ASC LIMIT ' . $this->_start . ', ' . $this->_limit;
-        $this->_data = $this->fetchAll($query);
+        $this->_data = $this->getReadConnection()->fetchAll($query);
         $this->_processedRecords += count($this->_data);
         $this->_entityIds = array();
         if(! empty($this->_data)) {
             $sortedData = array();
             foreach($this->_data AS $record) {
-                if(empty($record['entity_id'])) {
-                    continue;
-                }
                 $this->_entityIds[] = $record['entity_id'];
                 $sortedData[$record['entity_id']] = $record;
             }
@@ -46,6 +43,7 @@ class RetentionScience_Waves_Model_Export_Order extends RetentionScience_Waves_M
 
     protected function getTotalRecords() {
         return (int) $this
+                        ->getReadConnection()
                         ->fetchOne('SELECT COUNT(*) FROM `' . $this->getTableName('sales/order') . '`' . (empty($this->_idsToProcess) ? '' : ' WHERE `entity_id` IN (' . implode(', ', $this->_idsToProcess) . ')'));
     }
 
@@ -79,9 +77,9 @@ class RetentionScience_Waves_Model_Export_Order extends RetentionScience_Waves_M
         return number_format($data['base_tax_amount'], 2, '.', '');
     }
 
-	protected function getOrderedAt($data) {
-		return date("Y-m-d H:i:s", strtotime($data['created_at']));
-	}
+    protected function getOrderedAt($data) {
+        return date("Y-m-d H:i:s", Mage::getModel('core/date')->timestamp(strtotime($data['created_at'])));
+    }
 
     protected function getPaymentMethod($data) {
         if(isset($data['payment_method'])) {

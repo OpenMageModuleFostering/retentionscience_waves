@@ -9,9 +9,8 @@ class RetentionScience_Waves_Frontend_IndexController extends Mage_Core_Controll
             $result['siteID'] = $helper->getWebsiteId();
             $result['customerId'] = "";
             if(Mage::getSingleton('customer/session')->isLoggedIn()){
-                $email = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
-                $user_record_id = md5(trim(strtolower($email)));
-                $result['customerId'] = $user_record_id;
+                $customerId = Mage::getSingleton('customer/session')->getCustomerId();
+                $result['customerId'] = $customerId;
             }
 
 

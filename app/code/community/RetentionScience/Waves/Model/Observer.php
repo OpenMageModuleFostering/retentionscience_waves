@@ -97,9 +97,10 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
             }
 
             if(! $this->_delayedUpload) {
-                if(file_exists($exportModel->getBulkFile())) {
-                    @ unlink($exportModel->getBulkFile());
-                }
+                // temporarily disabling so we can inspect files
+//                if(file_exists($exportModel->getBulkFile())) {
+//                    @ unlink($exportModel->getBulkFile());
+//                }
 
                 if(file_exists($exportModel->getBulkFile() . '.gz')) {
                     @ unlink($exportModel->getBulkFile() . '.gz');
@@ -112,9 +113,10 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
         if($this->_delayedUpload AND ! empty($this->_delayedFiles)) {
             $this->uploadBulkFile($this->_delayedFiles);
             foreach($this->_delayedFiles AS $_file) {
-                if(file_exists($_file)) {
-                    @ unlink($_file);
-                }
+                // temporarily disabling so we can inspect files
+//                if(file_exists($_file)) {
+//                    @ unlink($_file);
+//                }
 
                 if(file_exists($_file . '.gz')) {
                     @ unlink($_file . '.gz');
@@ -153,8 +155,8 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
                 while(! feof($fp)) {
                     gzwrite($gzfp, fread($fp, 1024 * 512));
                 }
-                gzclose($gzfp);
-                fclose($fp);
+                gzclose($fp);
+                fclose($gzfp);
                 $filename = $gzfilename;
             }
             $uploadFiles[$group] = $filename;
@@ -291,10 +293,6 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
         if(! $this->getListenErrors()) {
             return;
         }
-        // Thats because magento doesn't support namespaces
-        if(preg_match('#Varien#', $errfile)) {
-            return;
-        }
         // Catch recoverable error
         // Do stuff
         $this->logRecoverableError($errno, $errstr, $errfile, $errline);
@@ -332,9 +330,6 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
     }
 
     protected function export() {
-        $selectedStore = Mage::app()->getStore(Mage::helper('waves')->getStoreId());
-        $defaultStore = Mage::app()->getStore();
-        Mage::app()->setCurrentStore($selectedStore);
         switch($this->getType()) {
             case self::EXPORT_TYPE_BATCH:
                 $this->exportBatch();
@@ -343,7 +338,6 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
                 $this->exportRecord();
                 break;
         }
-        Mage::app()->setCurrentStore($defaultStore);
     }
 
     protected function validate() {
@@ -415,4 +409,3 @@ class RetentionScience_Waves_Model_Observer extends Varien_Object {
     }
 
 }
-

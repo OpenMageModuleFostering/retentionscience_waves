@@ -29,8 +29,6 @@ class RetentionScience_Waves_Helper_Data extends Mage_Core_Helper_Abstract
 
     CONST WAVES_SETTINGS_AWS_SESSION_TOKEN = 'waves/rs_log_settings/aws_session_token';
 
-    CONST WAVES_SETTINGS_RUN_MANUAL = 'waves/retentionscience_settings/run_manual';
-
     CONST WAVES_CACHE_KEY_RSCOREDATA = 'waves_rscoredata';
 
     CONST WAVES_CACHE_LIFETIME = 600;
@@ -150,16 +148,6 @@ class RetentionScience_Waves_Helper_Data extends Mage_Core_Helper_Abstract
             return $this->_AWS_SESSION_TOKEN;
         }
         return Mage::getStoreConfig(self::WAVES_SETTINGS_AWS_SESSION_TOKEN);
-    }
-
-    public function getRunManual() {
-        return Mage::getStoreConfig(self::WAVES_SETTINGS_RUN_MANUAL);
-    }
-
-    public function setRunManual($value) {
-        Mage::getConfig()->saveConfig(self::WAVES_SETTINGS_RUN_MANUAL, $value);
-        Mage::getConfig()->cleanCache();
-        return $this;
     }
 
     public function setAWSSessionToken($value) {
