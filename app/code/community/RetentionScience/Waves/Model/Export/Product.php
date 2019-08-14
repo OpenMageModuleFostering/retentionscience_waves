@@ -219,10 +219,8 @@ class RetentionScience_Waves_Model_Export_Product extends RetentionScience_Waves
 
     protected function getManufacturer($data) {
         // Magento outputs false on some items when manufacturer not selected in UI
-        $manufacturer = $data['manufacturer'];
-
-        if (isset($manufacturer) && ($manufacturer != false)) {
-          return $manufacturer;
+        if (isset($data['manufacturer']) && ($data['manufacturer'] != false)) {
+          return $data['manufacturer'];
         } else {
           return NULL;
         }
